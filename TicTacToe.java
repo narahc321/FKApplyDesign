@@ -4,7 +4,7 @@ java -cp  ClassFiles/ TicTacToe.TicTacToe
 
 */
 package TicTacToe;
-// import java.util.TextUtils;
+import java.util.Scanner;
 import java.util.Arrays;
 
 class Board{
@@ -70,6 +70,7 @@ interface Player{
 	public boolean setBox(int index);
 	public int getPlayerType();
 	public String getName();
+	public void getBox();
 }
 
 class HumanPlayer implements Player{
@@ -81,6 +82,57 @@ class HumanPlayer implements Player{
 		this.name = name;
 		this.playerType = playerType;
 		this.board = board;
+	}
+
+	public void getBox(){
+		int index = -1;
+    	Scanner sc = new Scanner(System.in);
+		while(!this.setBox(index)){
+			index = sc.nextInt();
+		}
+	}
+
+	public boolean setBox(int index){
+		return board.setBox(index, playerType);
+	}
+
+	public int getPlayerType(){
+		return playerType;
+	}
+
+	public String getName(){
+		return name;
+	}
+
+}
+
+class ComputerPlayer implements Player{
+	private String name;
+	private int playerType;
+	private Board board; 
+
+	ComputerPlayer(int playerType, Board board){
+		this.name = "Computer";
+		this.playerType = playerType;
+		this.board = board;
+	}
+
+	private int getIndex(String s){
+		int tempIndex = 0;
+		for(char c : s.toCharArray()){
+			if(c == '1' || c=='2')
+				tempIndex++;
+			else if(c == '0')	
+				return tempIndex;
+		}
+		return tempIndex;
+	}
+
+	public void getBox(){
+		int index = -1;
+		while(!this.setBox(index)){
+			index = getIndex(board.getBoard());
+		}
 	}
 
 	public boolean setBox(int index){
