@@ -6,6 +6,8 @@ java -cp  ClassFiles/ TicTacToe.TicTacToe
 package TicTacToe;
 import java.util.Scanner;
 import java.util.Arrays;
+import java.util.stream.Stream;
+
 
 class Board{
 	private int dimension = 3,boxes;
@@ -17,29 +19,31 @@ class Board{
 			board[i] = 0;
 	}
 
-	public boolean setBox(int index, int player){
-		if(!this.validIndex(index) || !this.validPlayer(player)){
-			System.out.println("Please Select valid box");
-			this.printBoard();
+	public boolean setBox(int index, Player player){
+		System.out.println("Player  "+ player.getName() + " selected " + index);
+		if(!this.validIndex(index) || !this.validPlayer(player.getPlayerType())){
+			System.out.println("Please Select valid box" + player);
+			// this.printBoard();
 			System.out.println("player "+ player + " turn");
 			return false;
 		}
 		else{
-			board[index] = player;
-			this.printBoard();
+			board[index] = player.getPlayerType();
+			// this.printBoard();
 			return true;
 		}
 	}
 
 	private boolean validIndex(int index){
-		if(index >= boxes || board[index] != 0)
+		// System.out.println(" Invalid index ");
+		if(index >= boxes || index < 0 || board[index] != 0)
 			return false;
 		else 
 			return true;
 	}
 
 	private boolean validPlayer(int player){
-		if(player != 0 && player != 1)
+		if(player != 1 && player != 2)
 			return false;
 		else 
 			return true;
@@ -49,18 +53,21 @@ class Board{
 		for(int i = 0; i < boxes; i++){
 			if(i % dimension == 0){
 				System.out.println();
+				System.out.print((i) + " " + (i+1) + " " + (i+2) + "		");
 			}
 			if(board[i] == 1)
 				System.out.print("O ");
 			else if(board[i] == 2)			
 				System.out.print("X ");
 			else 
-				System.out.print("  ");
+				System.out.print("_ ");
 		}
+		System.out.println();
 	}
 
-	public String getBoard(){
-		return Arrays.toString(board);
+	public int[] getBoard(){
+		// return Arrays.toString(board);
+		return  board;
 		// return TextUtils.join("",board);
 
 	}
@@ -84,11 +91,11 @@ class HumanPlayer implements Player{
 	}
 
 	public void setBox(){
-		int index = -1;
+		int index;
     	Scanner sc = new Scanner(System.in);
-		while(!board.setBox(index, this.playerType)){
+		do{
 			index = sc.nextInt();
-		}
+		}while(!board.setBox(index, this));
 	}
 
 	public int getPlayerType(){
@@ -112,22 +119,20 @@ class ComputerPlayer implements Player{
 		this.board = board;
 	}
 
-	private int getIndex(String s){
-		int tempIndex = 0;
-		for(char c : s.toCharArray()){
-			if(c == '1' || c=='2')
-				tempIndex++;
-			else if(c == '0')	
-				return tempIndex;
+	private int getIndex(int[] orgBoard){
+		for(int i = 0; i < 9; i++){
+			if(orgBoard[i] == 0)
+				return i;
 		}
-		return tempIndex;
+		return 0;
 	}
 
 	public void setBox(){
-		int index = -1;
-		while(!board.setBox(index, playerType)){
+		int index;
+		do{
 			index = getIndex(board.getBoard());
-		}
+			System.out.println(" index " + index);
+		}while(!board.setBox(index, this));
 	}
 
 	public int getPlayerType(){
@@ -150,26 +155,14 @@ class GameState{
 		this.dimension = 3;
 	} 
 
-	private void setBoard(String boardString){
+	private void setBoard(int[] boardString){
 		int tempIndex = 0;
-		for(char c : boardString.toCharArray()){
-			if(c == '1'){
-				this.board[tempIndex] = 1;
-				tempIndex++;
-			}
-			else if(c == '2'){
-				this.board[tempIndex] = 2;
-				tempIndex++;			
-			}
-			else if(c == '0'){
-				this.board[tempIndex] = 0;
-				tempIndex++;			
-			}
-		}
+		for(int i = 0; i < boxes; i++)
+			this.board[i] = boardString[i];
 	} 
 
-	public boolean isFull(String boardString){
-		this.setBoard(boardString);
+	public boolean isFull(int[] orgBoard){
+		this.setBoard(orgBoard);
 		for(int i = 0; i < boxes; i++){
 			if(this.board[i] == 0)
 				return false;
@@ -177,7 +170,8 @@ class GameState{
 		return true;
 	}
 
-	public boolean checkWin(int playerType){
+	public boolean checkWin(int playerType, int[] orgBoard){
+		this.setBoard(orgBoard);
 		if(playerType == board[0] && playerType == board[1] && playerType == board[2])
 			return true;
 		if(playerType == board[3] && playerType == board[4] && playerType == board[5])
@@ -240,14 +234,17 @@ class Game{
 	}
 
 	public void runGame(){
+		board.printBoard();
 		while(!gameOver){
 			currentPlayer.setBox();
-			if(gameState.checkWin(currentPlayer.getPlayerType())){
+			if(gameState.checkWin(currentPlayer.getPlayerType(), board.getBoard())){
 				gameOver = true;
-				System.out.println(" Player " + currentPlayer.getName() + " Won the Game");
+				board.printBoard();
+				System.out.println("Player " + currentPlayer.getName() + " Won the Game");
 			}
 			else if(gameState.isFull(board.getBoard())){
 				gameOver = true;
+				board.printBoard();
 				System.out.println(" No more moves possible game is Tie");
 			}
 			else{
@@ -257,8 +254,8 @@ class Game{
 				else{
 					currentPlayer = player1;
 				}
+				board.printBoard();
 			}
-			board.printBoard();
 		}
 	}
 }
@@ -266,6 +263,6 @@ class Game{
 public class TicTacToe{
 	public static void main(String[] args){
 		Game game = new Game();
-		// game.runGame();
+		game.runGame();
 	}
 }

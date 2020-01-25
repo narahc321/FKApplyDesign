@@ -33,3 +33,14 @@ commit to Feature04-TicTacToeGameImplementingGameClass
 		-combine all the method and perform test
 		-edit the win check method
 		-implement good computer algorithm
+
+commit to Feature05-TicTacToeGameUseClasses
+	changed return type of board
+	changed getIndex methods
+
+	To Do
+		- checking method doesn't work for different sizes
+		- change where ever fix size is set
+		- computer alogirthm is not good
+		
+
