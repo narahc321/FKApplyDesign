@@ -7,6 +7,7 @@ package TicTacToe;
 import java.util.Scanner;
 import java.util.Arrays;
 import java.util.stream.Stream;
+import java.util.stream.IntStream; 
 
 
 class Board{
@@ -67,7 +68,7 @@ class Board{
 
 	public int[] getBoard(){
 		// return Arrays.toString(board);
-		return  board;
+		return  board.clone();
 		// return TextUtils.join("",board);
 
 	}
@@ -172,6 +173,7 @@ class GameState{
 
 	public boolean checkWin(int playerType, int[] orgBoard){
 		this.setBoard(orgBoard);
+
 		if(playerType == board[0] && playerType == board[1] && playerType == board[2])
 			return true;
 		if(playerType == board[3] && playerType == board[4] && playerType == board[5])
@@ -189,6 +191,13 @@ class GameState{
 		if(playerType == board[2] && playerType == board[4] && playerType == board[6])
 			return true;
 		return false;
+
+
+		// IntStream.range(0, dimension).forEachOrdered(x -> {
+  //   		if(this.check(x * dimension, dimension, playerType)){
+  //   			return true;
+  //   		}
+		// });
 	}
 }
 
