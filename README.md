@@ -23,3 +23,13 @@ commit to Feature03-TicTacToeGameImplementingComputerPlayerClass
 	To Do
 		- implement the game method
 		- implement the driving program
+
+commit to Feature04-TicTacToeGameImplementingGameClass
+	implemented game class with gameRun method
+	implemented gameState class to check wining or tie status of game
+	removed get index method from player  
+
+	To Do 
+		-combine all the method and perform test
+		-edit the win check method
+		-implement good computer algorithm
