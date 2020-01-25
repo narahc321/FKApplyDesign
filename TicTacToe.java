@@ -66,6 +66,37 @@ class Board{
 	}
 }
 
+interface Player{
+	public boolean setBox(int index);
+	public int getPlayerType();
+	public String getName();
+}
+
+class HumanPlayer implements Player{
+	private String name;
+	private int playerType;
+	private Board board; 
+
+	HumanPlayer(String name, int playerType, Board board){
+		this.name = name;
+		this.playerType = playerType;
+		this.board = board;
+	}
+
+	public boolean setBox(int index){
+		return board.setBox(index, playerType);
+	}
+
+	public int getPlayerType(){
+		return playerType;
+	}
+
+	public String getName(){
+		return name;
+	}
+
+}
+
 public class TicTacToe{
 	public static void main(String[] args){
 		Board b = new Board();
