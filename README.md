@@ -42,5 +42,19 @@ commit to Feature05-TicTacToeGameUseClasses
 		- checking method doesn't work for different sizes
 		- change where ever fix size is set
 		- computer alogirthm is not good
-		
+	
+commit to phase2MegaClassImplement
+	added phase2 feature
+	added mega class
+	higher level tictactoe
+	
+	To Do
+		-Remove unwanted code
+		-optimize the code
+		-phase3
+
+commit to Phase2BugFix
+	Removed Unwanted Code
+	Remove Megaclass and implememted in Game class
+	Fixed other bugs
 
