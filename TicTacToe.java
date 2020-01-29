@@ -10,18 +10,37 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 import java.util.stream.IntStream; 
-
+import java.util.Random;
 
 class Board{
-	private int boardDimension;
+	private int boardDimension, boardType, blockPercent = 30;
 	private int[][] board;
-	Board(int boardDimension){
+	Random random;
+	Board(int irregularBoard, int boardType, int boardDimension){
+		this.boardType = boardType;
 		this.boardDimension = boardDimension;
+		random = new Random(100);
 		board = new int[boardDimension][boardDimension];
 		for(int i = 0; i < boardDimension ; i++){
-			for(int j = 0; j < boardDimension ; j++)
+			for(int j = 0; j < boardDimension ; j++){
 				board[i][j] = 0;
+				if(irregularBoard == 0){
+					if(random.nextInt() < 30)
+						board[i][j] = -1;
+				}
+			}
 		}
+		
+	}
+
+
+	public boolean isFull(){
+		for(int i = 0; i < boardDimension; i++){
+			for(int j = 0; j < boardDimension; j++)
+				if(board[i][j] == 0)
+					return false;
+		}
+		return true;
 	}
 
 	public void resetCell(int index){
@@ -69,17 +88,26 @@ class Board{
 	public void printBoard(){
 		for(int i = 0; i< boardDimension; i++){
 			System.out.println();
+			// for(int j = 0; j< boardDimension; j++){
+			// 	if(boardType ==0 && i%2==1){
+			// 		System.out.print("    ");
+			// 	}
+				
+			// }
+			// System.out.print("\t\t");
+				// System.out.print("  ");
 			for(int j = 0; j< boardDimension; j++){
-				System.out.print((i*boardDimension + j) + "\t");
-			}
-			System.out.print("\t\t");
-			for(int j = 0; j< boardDimension; j++){
-				if(board[i][j] == 1)
+				if(boardType == 0 && i%2 == 1){
+					System.out.print("    ");
+				}
+				if(board[i][j] == -1)
+					System.out.print(" \t");
+				else if(board[i][j] == 1)
 					System.out.print("O\t");
 				else if(board[i][j] == 2)			
 					System.out.print("X\t");
 				else 
-					System.out.print("_\t");
+					System.out.print((i*boardDimension + j) + "\t");
 			}
 			System.out.println();
 		}
@@ -186,16 +214,74 @@ class GameState{
 		this.dimension = dimension;
 	}
 
-	public static boolean isFull(int[][] board){
-		for(int i = 0; i < dimension; i++){
-			for(int j=0;j<dimension;j++)
-				if(board[i][j] == 0)
-					return false;
-		}
-		return true;
+	public static boolean checkWin(int boardType, int playerType, int[][] board){
+		if(boardType == 0)
+			return checkWinHexagonalBoard(playerType, board);
+		else
+			return checkWinHexagonalBoard(playerType, board);
 	}
 
-	public static boolean checkWin(int playerType, int[][] board){
+	public static boolean checkWinHexagonalBoard(int playerType, int[][] board){
+		Set<Integer> set;
+		Set<Integer> countCells;
+		// System.out.println(1);
+		for(int i = 0; i < dimension; i++){
+			set = new HashSet<Integer>();
+			set.add(playerType);
+			for(int j=0;j<dimension;j++){
+				set.add(board[i][j]);
+			}
+			if(set.size()==1)
+				return true;
+		}
+
+			
+		for(int i = 0; i < dimension; i++){
+			set = new HashSet<Integer>();
+			countCells = new HashSet<Integer>();
+			set.add(playerType);	
+			int k = i-1;
+			for(int j = 0; j < dimension; j++){
+				if(j%2==0)
+					k++;
+				if(k >= dimension)
+					break;
+				set.add(board[j][k]);
+				countCells.add((j*dimension) + k);
+			}
+			if(countCells.size()!=dimension)
+				set.add(-1);
+			if(set.size()==1)
+				return true;
+		}
+
+
+		for(int i = 0; i < dimension; i++){
+			set = new HashSet<Integer>();
+			countCells = new HashSet<Integer>();
+			set.add(playerType);	
+			int k = i-1;
+			for(int j = 0; j < dimension; j++){
+				if(j%2==0)
+					k--;
+				if(k<0)
+					break;
+				set.add(board[j][k]);
+				countCells.add((j*dimension) + k);
+			}
+			if(countCells.size()!=dimension)
+				set.add(-1);
+			if(set.size()==1)
+				return true;
+		}
+
+
+		return false;
+
+	}
+
+
+	public static boolean checkWinSquareBoard(int playerType, int[][] board){
 
 		Set<Integer> set;
 		// System.out.println(1);
@@ -254,14 +340,16 @@ class Game{
 	private Game[][] multiGame ; 
 	private int[][]  gameResult ; 
 	private int nPlayers, gameSize, xboardsStart, yboardsStart,
-		  dimension;
+		  dimension, boardType, irregularBoard;
 	
 
-	Game(int gameSize, int dimension){
+	Game(int irregularBoard,int boardType, int gameSize, int dimension){
 		steps = new ArrayList<Integer>();
 		this.dimension = dimension;
+		this.irregularBoard = irregularBoard;
 		GameState.dimension = dimension;
-		this.board = new Board(gameSize);
+		this.boardType = boardType;
+		this.board = new Board(irregularBoard, boardType, gameSize);
 		this.xboardsStart = 0;
 		this.yboardsStart = 0;
 		this.gameSize = gameSize;
@@ -369,7 +457,7 @@ class Game{
 				}
 			}
 		}
-		if(GameState.checkWin(player.getPlayerType(), gameResult)){
+		if(GameState.checkWin(boardType, player.getPlayerType(), gameResult)){
 			player.addScore(this.gameSize);
 			return player.getPlayerType();
 		}
@@ -392,13 +480,13 @@ class Game{
 				}
 			}
 			this.updateScore(currentPlayer);
-			if(GameState.checkWin(currentPlayer.getPlayerType(), gameResult)){
+			if(GameState.checkWin(boardType, currentPlayer.getPlayerType(), gameResult)){
 				gameOver = true;
 				board.printBoard();
 				System.out.println("Player " + currentPlayer.getName() + " Won the Game");
 				currentPlayer.addScore(this.gameSize);
 			}
-			else if(GameState.isFull(board.getBoard())){
+			else if(board.isFull()){
 				gameOver = true;
 				board.printBoard();
 				System.out.println(" No more moves possible game is Tie");
@@ -423,7 +511,17 @@ class Game{
 public class TicTacToe{
 	public static void main(String[] args){
 		Scanner sc = new Scanner(System.in);
-		int singleGameDim, boardSize=1, level;
+		int singleGameDim, boardSize=1, level, boardType, irregularBoard;
+		System.out.println("Enter 0 for Irregular Board or 1-9 for Square Board");
+		irregularBoard = sc.nextInt();
+		if(irregularBoard != 0){
+			irregularBoard = 1;
+		}
+		System.out.println("Enter 0 for Hexogonal Board or 1-9 for Square Board");
+		boardType = sc.nextInt();
+		if(boardType != 0){
+			boardType = 1;
+		}
 		System.out.println("Enter single Game Dimension ");
 		singleGameDim = sc.nextInt();
 		System.out.println("Enter Number of levels deep ");
@@ -434,7 +532,7 @@ public class TicTacToe{
 		for(int i=0;i<level;i++)
 			boardSize = boardSize * singleGameDim;
 		System.out.println(singleGameDim + " "+ boardSize);
-		Game game = new Game(boardSize, singleGameDim);
+		Game game = new Game(irregularBoard, boardType, boardSize, singleGameDim);
 		game.runGame();
 	}
 }

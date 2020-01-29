@@ -58,3 +58,9 @@ commit to Phase2BugFix
 	Remove Megaclass and implememted in Game class
 	Fixed other bugs
 
+
+commit to Phase3SuperTicTacToe
+	added hexogonal TicTacToe Game
+	Changed board checking feature to board class
+	added Irrecgular board feature
+
