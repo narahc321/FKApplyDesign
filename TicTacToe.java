@@ -12,43 +12,44 @@ import java.util.stream.Stream;
 import java.util.stream.IntStream; 
 import java.util.Random;
 
+enum CellValue{
+	EMPTY, O, X, BLOCKED;
+}
+
 class Board{
 	private int boardDimension, boardType, blockPercent = 30;
-	private int[][] board;
+	private CellValue[][] board;
 	Random random;
 	Board(int irregularBoard, int boardType, int boardDimension){
 		this.boardType = boardType;
 		this.boardDimension = boardDimension;
 		random = new Random(100);
-		board = new int[boardDimension][boardDimension];
+		board = new CellValue[boardDimension][boardDimension];
 		for(int i = 0; i < boardDimension ; i++){
 			for(int j = 0; j < boardDimension ; j++){
-				board[i][j] = 0;
+				board[i][j] = CellValue.EMPTY;
 				if(irregularBoard == 0){
-					if(random.nextInt() < 30)
-						board[i][j] = -1;
+					if(random.nextInt() < blockPercent)
+						board[i][j] = CellValue.BLOCKED;
 				}
 			}
 		}
-		
 	}
-
 
 	public boolean isFull(){
 		for(int i = 0; i < boardDimension; i++){
 			for(int j = 0; j < boardDimension; j++)
-				if(board[i][j] == 0)
+				if(board[i][j] == CellValue.EMPTY)
 					return false;
 		}
 		return true;
 	}
 
 	public void resetCell(int index){
-		board[index/boardDimension][index%boardDimension]=0;
+		board[index/boardDimension][index%boardDimension] = CellValue.EMPTY;
 	}
 
-	public int getCell(int xindex, int yindex){
-		// System.out.println(xindex + " hell  "+yindex);
+	public CellValue getCell(int xindex, int yindex){
 		return board[xindex][yindex];
 	}
 
@@ -56,30 +57,26 @@ class Board{
 		System.out.println("Player  "+ player.getName() + " selected " + xindex + " " + yindex);
 		if(!this.validIndex(xindex, yindex) || !this.validPlayer(player.getPlayerType())){
 			System.out.println("Please Select valid box" + player.getName());
-			// this.printBoard();
 			System.out.println("player "+ player.getName() + " turn");
 			return false;
 		}
 		else{
-			// System.out.println("test1");
 			board[xindex][yindex] = player.getPlayerType();
-			// System.out.println("test1");
 			return true;
 		}
 	}
 
 	private boolean validIndex(int xindex, int yindex){
-		// System.out.println(" Invalid index ");
 		if(xindex >= boardDimension || xindex < 0 || yindex >= boardDimension
-						 || yindex < 0 || board[xindex][yindex] != 0)
+						 || yindex < 0 || board[xindex][yindex] != CellValue.EMPTY)
 			return false;
 		else 
 			return true;
 	}
 
 
-	private boolean validPlayer(int player){
-		if(player != 1 && player != 2)
+	private boolean validPlayer(CellValue playerType){
+		if(playerType != CellValue.O && playerType != CellValue.X)
 			return false;
 		else 
 			return true;
@@ -88,23 +85,14 @@ class Board{
 	public void printBoard(){
 		for(int i = 0; i< boardDimension; i++){
 			System.out.println();
-			// for(int j = 0; j< boardDimension; j++){
-			// 	if(boardType ==0 && i%2==1){
-			// 		System.out.print("    ");
-			// 	}
-				
-			// }
-			// System.out.print("\t\t");
-				// System.out.print("  ");
 			for(int j = 0; j< boardDimension; j++){
-				if(boardType == 0 && i%2 == 1){
+				if(boardType == 0 && i%2 == 1)
 					System.out.print("    ");
-				}
-				if(board[i][j] == -1)
+				if(board[i][j] == CellValue.BLOCKED)
 					System.out.print(" \t");
-				else if(board[i][j] == 1)
+				else if(board[i][j] == CellValue.O)
 					System.out.print("O\t");
-				else if(board[i][j] == 2)			
+				else if(board[i][j] == CellValue.X)			
 					System.out.print("X\t");
 				else 
 					System.out.print((i*boardDimension + j) + "\t");
@@ -113,17 +101,15 @@ class Board{
 		}
 	}
 
-	public int[][] getBoard(){
-		// return Arrays.toString(board);
+	public CellValue[][] getBoard(){
 		return  board.clone();
-		// return TextUtils.join("",board);
 
 	}
 }
 
 interface Player{
-	public int getIndex(int[][] orgBoard, int dimension);
-	public int getPlayerType();
+	public int getIndex(CellValue[][] board, int dimension);
+	public CellValue getPlayerType();
 	public String getName();
 	public int getScore();
 	public void addScore(int points);
@@ -131,14 +117,14 @@ interface Player{
 
 class HumanPlayer implements Player{
 	private String name;
-	private int playerType;
+	private CellValue type;
 	private Board board; 
 	public int score;
 	Scanner sc;
 
-	HumanPlayer(String name, int playerType, Board board){
+	HumanPlayer(String name, CellValue type, Board board){
 		this.name = name;
-		this.playerType = playerType;
+		this.type = type;
 		this.board = board;
 		this.score = 0;
 		sc = new Scanner(System.in);
@@ -152,12 +138,13 @@ class HumanPlayer implements Player{
 		this.score = this.score + points;
 	}
 
-	public int getIndex(int[][] orgBoard, int dimension){
+	public int getIndex(CellValue[][] board, int gameSize){
+		System.out.println("Type a Index to mark that Cell");
 		return sc.nextInt();
 	}
 
-	public int getPlayerType(){
-		return playerType;
+	public CellValue getPlayerType(){
+		return type;
 	}
 
 	public String getName(){
@@ -168,13 +155,13 @@ class HumanPlayer implements Player{
 
 class ComputerPlayer implements Player{
 	private String name;
-	private int playerType;
+	private CellValue type;
 	private Board board;
 	private int score;
 
-	ComputerPlayer(int playerType, Board board){
+	ComputerPlayer(CellValue playerType, Board board){
 		this.name = "Computer";
-		this.playerType = playerType;
+		this.type = playerType;
 		this.board = board;
 		this.score = 0;
 	}
@@ -187,18 +174,18 @@ class ComputerPlayer implements Player{
 		this.score = this.score + points;
 	}
 
-	public int getIndex(int[][] board, int gameSize){
+	public int getIndex(CellValue[][] board, int gameSize){
 		for(int i = 0; i < gameSize; i++){
 			for(int j = 0; j< gameSize; j++){
-				if(board[i][j] == 0)
+				if(board[i][j] == CellValue.EMPTY)
 					return (i * gameSize) + j;
 			}
 		}
 		return 0;
 	}
 
-	public int getPlayerType(){
-		return playerType;
+	public CellValue getPlayerType(){
+		return type;
 	}
 
 	public String getName(){
@@ -208,25 +195,33 @@ class ComputerPlayer implements Player{
 }
 
 class GameState{
-	public static int dimension ;
-
-	GameState(int dimension){
-		this.dimension = dimension;
-	}
-
-	public static boolean checkWin(int boardType, int playerType, int[][] board){
+	public static boolean checkWin(int boardType, CellValue playerType, CellValue[][] board, int dimension){
 		if(boardType == 0)
-			return checkWinHexagonalBoard(playerType, board);
+			return checkWinHexagonalBoard(playerType, board, dimension);
 		else
-			return checkWinHexagonalBoard(playerType, board);
+			return checkWinHexagonalBoard(playerType, board, dimension);
 	}
 
-	public static boolean checkWinHexagonalBoard(int playerType, int[][] board){
-		Set<Integer> set;
-		Set<Integer> countCells;
-		// System.out.println(1);
+	public static boolean checkWinHexagonalBoard(CellValue playerType, CellValue[][] board, int dimension){
+		if(CheckRow(playerType, board, dimension) || checkHexRightDiagonal(playerType, board, dimension)
+						|| checkHexLeftDiagonal(playerType, board, dimension))
+			return true;
+		else
+			return false;
+	}
+
+	public static boolean checkWinSquareBoard(CellValue playerType, CellValue[][] board, int dimension){
+		if(CheckRow(playerType, board, dimension) || CheckColumn(playerType, board, dimension)
+				|| CheckLeftDiagonal(playerType, board, dimension) || CheckRightDiagonal(playerType, board, dimension))
+			return true;
+		else
+			return false;
+	}
+
+	private static boolean CheckRow(CellValue playerType, CellValue[][] board, int dimension){
+		Set <CellValue> set;
 		for(int i = 0; i < dimension; i++){
-			set = new HashSet<Integer>();
+			set = new HashSet<CellValue>();
 			set.add(playerType);
 			for(int j=0;j<dimension;j++){
 				set.add(board[i][j]);
@@ -234,10 +229,52 @@ class GameState{
 			if(set.size()==1)
 				return true;
 		}
+		return false;
+	}
 
-			
+	private static boolean CheckColumn(CellValue playerType, CellValue[][] board, int dimension){
+		Set <CellValue> set;
 		for(int i = 0; i < dimension; i++){
-			set = new HashSet<Integer>();
+			set = new HashSet<CellValue>();
+			set.add(playerType);
+			for(int j = 0; j < dimension; j++){
+				set.add(board[j][i]);
+			}
+			if(set.size() == 1)
+				return true;
+		} 	
+		return false;
+	}
+
+	private static boolean CheckRightDiagonal(CellValue playerType, CellValue[][] board, int dimension){
+		Set <CellValue> set;
+		set = new HashSet<CellValue>();
+		set.add(playerType);
+		for(int i = 0; i < dimension; i++){
+			set.add(board[i][i]);
+		}
+		if(set.size()==1)
+			return true;
+		return false;
+	}
+
+	private static boolean CheckLeftDiagonal(CellValue playerType, CellValue[][] board, int dimension){
+		Set <CellValue> set;
+		set = new HashSet<CellValue>();
+		set.add(playerType);
+		for(int i = 0; i < dimension; i++){
+			set.add(board[i][dimension - 1 - i]);
+		}
+		if(set.size()==1)
+			return true;
+		return false;
+	}
+
+	private static boolean checkHexRightDiagonal(CellValue playerType, CellValue[][] board, int dimension){
+		Set <CellValue> set;
+		Set <Integer> countCells;
+		for(int i = 0; i < dimension; i++){
+			set = new HashSet<CellValue>();
 			countCells = new HashSet<Integer>();
 			set.add(playerType);	
 			int k = i-1;
@@ -250,84 +287,37 @@ class GameState{
 				countCells.add((j*dimension) + k);
 			}
 			if(countCells.size()!=dimension)
-				set.add(-1);
+				set.add(CellValue.EMPTY);
 			if(set.size()==1)
 				return true;
 		}
+		return false;
+	}
 
-
+	private static boolean checkHexLeftDiagonal(CellValue playerType, CellValue[][] board, int dimension){
+		Set <CellValue> set;
+		Set <Integer> countCells;
 		for(int i = 0; i < dimension; i++){
-			set = new HashSet<Integer>();
+			set = new HashSet<CellValue>();
 			countCells = new HashSet<Integer>();
 			set.add(playerType);	
 			int k = i-1;
 			for(int j = 0; j < dimension; j++){
-				if(j%2==0)
+				if(j % 2 == 0)
 					k--;
-				if(k<0)
+				if(k < 0)
 					break;
 				set.add(board[j][k]);
 				countCells.add((j*dimension) + k);
 			}
 			if(countCells.size()!=dimension)
-				set.add(-1);
+				set.add(CellValue.EMPTY);
 			if(set.size()==1)
 				return true;
 		}
-
-
-		return false;
-
-	}
-
-
-	public static boolean checkWinSquareBoard(int playerType, int[][] board){
-
-		Set<Integer> set;
-		// System.out.println(1);
-		for(int i = 0; i < dimension; i++){
-			set = new HashSet<Integer>();
-			set.add(playerType);
-			for(int j=0;j<dimension;j++){
-				set.add(board[i][j]);
-			}
-			if(set.size()==1)
-				return true;
-		} 	
-
-		// System.out.println(2);
-		for(int i = 0; i < dimension; i++){
-			set = new HashSet<Integer>();
-			set.add(playerType);
-			for(int j = 0; j < dimension; j++){
-				set.add(board[j][i]);
-			}
-			if(set.size() == 1)
-				return true;
-		} 	
-
-		// System.out.println(3);
-		set = new HashSet<Integer>();
-		set.add(playerType);
-		// System.out.println(playerType);
-		for(int i = 0; i < dimension; i++){
-			// System.out.println(board[i][i]);
-			set.add(board[i][i]);
-		}
-		if(set.size()==1)
-			return true;
-
-		// System.out.println(4);
-		set = new HashSet<Integer>();
-		set.add(playerType);
-		for(int i = 0; i < dimension; i++){
-			set.add(board[i][dimension - 1 - i]);
-		}
-		if(set.size()==1)
-			return true;
-		// System.out.println(5);
 		return false;
 	}
+
 }
 
 class Game{
@@ -338,7 +328,7 @@ class Game{
 	private String tempName;
 	private ArrayList <Integer> steps;
 	private Game[][] multiGame ; 
-	private int[][]  gameResult ; 
+	private CellValue[][]  gameResult ; 
 	private int nPlayers, gameSize, xboardsStart, yboardsStart,
 		  dimension, boardType, irregularBoard;
 	
@@ -347,7 +337,6 @@ class Game{
 		steps = new ArrayList<Integer>();
 		this.dimension = dimension;
 		this.irregularBoard = irregularBoard;
-		GameState.dimension = dimension;
 		this.boardType = boardType;
 		this.board = new Board(irregularBoard, boardType, gameSize);
 		this.xboardsStart = 0;
@@ -357,10 +346,10 @@ class Game{
 		sc = new Scanner(System.in);
 		this.setPlayers();
 		currentPlayer = player1;
-		gameResult = new int[dimension][dimension];
+		gameResult = new CellValue[dimension][dimension];
 		for(int i = 0; i < dimension; i++){
 			for(int j = 0; j < dimension; j++){
-				gameResult[i][j] = 0;
+				gameResult[i][j] = CellValue.EMPTY;
 			}
 		}
 		if(gameSize > dimension){
@@ -374,16 +363,16 @@ class Game{
 
 		this.board = board;
 		multiGame = new Game[dimension][dimension]; 
-		gameResult = new int[dimension][dimension];
+		gameResult = new CellValue[dimension][dimension];
 		this.gameSize = gameSize;		
 		this.dimension = dimension;
 		this.xboardsStart = xboardsStart;
 		this.yboardsStart = yboardsStart;
 		gameOver = false;
-		gameResult = new int[dimension][dimension];
+		gameResult = new CellValue[dimension][dimension];
 		for(int i = 0; i < dimension; i++){
 			for(int j = 0; j < dimension; j++){
-				gameResult[i][j] = 0;
+				gameResult[i][j] = CellValue.EMPTY;
 			}
 		}
 		if(gameSize > dimension){
@@ -402,16 +391,16 @@ class Game{
 		if(nPlayers == 1){
 			System.out.println("Enter player Name");
 			tempName = sc.next();
-			player1 = new HumanPlayer(tempName, 1, this.board);
-			player2 = new ComputerPlayer(2, this.board); 
+			player1 = new HumanPlayer(tempName, CellValue.O, this.board);
+			player2 = new ComputerPlayer(CellValue.X, this.board); 
 		}
 		else{
 			System.out.println("Enter player 1 Name");
 			tempName = sc.next();
-			player1 = new HumanPlayer(tempName, 1, this.board);
+			player1 = new HumanPlayer(tempName, CellValue.O, this.board);
 			System.out.println("Enter player 2 Name");
 			tempName = sc.next();
-			player2 = new HumanPlayer(tempName, 2, this.board);
+			player2 = new HumanPlayer(tempName, CellValue.X, this.board);
 		}
 	}
 
@@ -420,7 +409,7 @@ class Game{
 			for(int j = 0; j < dimension; j++){
 				multiGame[i][j] = new Game(board, gameSize/this.dimension,this.dimension,
 				player1, player2, (gameSize/this.dimension)*i, (gameSize/this.dimension)*j);
-				gameResult[i][j] = 0;
+				gameResult[i][j] = CellValue.EMPTY;
 			}
 		}
 	}
@@ -437,12 +426,10 @@ class Game{
 		steps.add(index);
 	}
 
-	public int updateScore(Player player){
-		// System.out.println(this.gameSize + " " + this.dimension);
+	public CellValue updateScore(Player player){
 		if(this.gameSize == this.dimension){
 			for(int i = 0; i < dimension; i++){
 				for(int j = 0; j < dimension; j++){
-					// System.out.println(" hhii "+(xboardsStart+i) + "  "+(yboardsStart+j));
 					gameResult[i][j] = board.getCell(xboardsStart+i, yboardsStart+j);
 				}
 
@@ -451,26 +438,25 @@ class Game{
 		else{
 			for(int i = 0;i < dimension; i++){
 				for(int j = 0; j< dimension; j++){
-					if(gameResult[i][j]==0){
+					if(gameResult[i][j] == CellValue.EMPTY){
 						gameResult[i][j] = multiGame[i][j].updateScore(player);
 					}
 				}
 			}
 		}
-		if(GameState.checkWin(boardType, player.getPlayerType(), gameResult)){
+		if(GameState.checkWin(boardType, player.getPlayerType(), gameResult, dimension)){
 			player.addScore(this.gameSize);
 			return player.getPlayerType();
 		}
-		return 0;
+		return CellValue.EMPTY;
 	} 
 
 	public void runGame(){
-		// System.out.println("hello");
 
 		board.printBoard();
 		while(!gameOver){
 			this.setBox(currentPlayer);
-			if(steps.size()!=0){
+			if(steps.size() != 0){
 				System.out.println("press 1 to undo 0 to skip");
 				int undo = sc.nextInt();
 				if(undo == 1){
@@ -480,7 +466,7 @@ class Game{
 				}
 			}
 			this.updateScore(currentPlayer);
-			if(GameState.checkWin(boardType, currentPlayer.getPlayerType(), gameResult)){
+			if(GameState.checkWin(boardType, currentPlayer.getPlayerType(), gameResult, dimension)){
 				gameOver = true;
 				board.printBoard();
 				System.out.println("Player " + currentPlayer.getName() + " Won the Game");

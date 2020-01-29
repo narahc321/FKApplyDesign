@@ -64,3 +64,6 @@ commit to Phase3SuperTicTacToe
 	Changed board checking feature to board class
 	added Irrecgular board feature
 
+commit to Phase3SuperTicTacToe
+	Changed Cell values to enum
+	separated each win checking methods
