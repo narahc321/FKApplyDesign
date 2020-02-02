@@ -73,6 +73,9 @@ commit to Phase3SuperTicTacToe
 	converted to Intellij project
 	added enum
 	seperated functions
+    
+commit to dev
+    added unit tests for every class
 
 
 
