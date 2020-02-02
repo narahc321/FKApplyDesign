@@ -67,3 +67,12 @@ commit to Phase3SuperTicTacToe
 commit to Phase3SuperTicTacToe
 	Changed Cell values to enum
 	separated each win checking methods
+
+
+commit to Phase3SuperTicTacToe
+	converted to Intellij project
+	added enum
+	seperated functions
+
+
+

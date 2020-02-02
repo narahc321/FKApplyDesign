@@ -16,33 +16,50 @@ enum CellValue{
 	EMPTY, O, X, BLOCKED;
 }
 
-class Board{
+interface BoardFunctions{
+
+	public boolean isFull();
+	public void resetCell(int index)
+	public CellValue getCell(int xindex, int yindex)
+	public boolean setBox(int xindex, int yindex, Player player)
+	public void printBoard()
+	public CellValue[][] getBoard()
+
+}
+
+class Board implements BoardFunctions{
+	
 	private int boardDimension, boardType, blockPercent = 30;
 	private CellValue[][] board;
 	Random random;
+
 	Board(int irregularBoard, int boardType, int boardDimension){
+		
 		this.boardType = boardType;
 		this.boardDimension = boardDimension;
+		
 		random = new Random(100);
 		board = new CellValue[boardDimension][boardDimension];
+		
 		for(int i = 0; i < boardDimension ; i++){
 			for(int j = 0; j < boardDimension ; j++){
 				board[i][j] = CellValue.EMPTY;
-				if(irregularBoard == 0){
-					if(random.nextInt() < blockPercent)
-						board[i][j] = CellValue.BLOCKED;
+				if(irregularBoard == 0 && random.nextInt() < blockPercent){
+					board[i][j] = CellValue.BLOCKED;
 				}
 			}
 		}
 	}
 
 	public boolean isFull(){
+		
 		for(int i = 0; i < boardDimension; i++){
 			for(int j = 0; j < boardDimension; j++)
 				if(board[i][j] == CellValue.EMPTY)
 					return false;
 		}
 		return true;
+	
 	}
 
 	public void resetCell(int index){
@@ -54,6 +71,7 @@ class Board{
 	}
 
 	public boolean setBox(int xindex, int yindex, Player player){
+		
 		System.out.println("Player  "+ player.getName() + " selected " + xindex + " " + yindex);
 		if(!this.validIndex(xindex, yindex) || !this.validPlayer(player.getPlayerType())){
 			System.out.println("Please Select valid box" + player.getName());
@@ -64,46 +82,64 @@ class Board{
 			board[xindex][yindex] = player.getPlayerType();
 			return true;
 		}
+	
 	}
 
 	private boolean validIndex(int xindex, int yindex){
+	
 		if(xindex >= boardDimension || xindex < 0 || yindex >= boardDimension
 						 || yindex < 0 || board[xindex][yindex] != CellValue.EMPTY)
 			return false;
 		else 
 			return true;
+	
 	}
 
 
 	private boolean validPlayer(CellValue playerType){
+	
 		if(playerType != CellValue.O && playerType != CellValue.X)
 			return false;
 		else 
 			return true;
+	
 	}
 
 	public void printBoard(){
-		for(int i = 0; i< boardDimension; i++){
-			System.out.println();
-			for(int j = 0; j< boardDimension; j++){
-				if(boardType == 0 && i%2 == 1)
-					System.out.print("    ");
-				if(board[i][j] == CellValue.BLOCKED)
-					System.out.print(" \t");
-				else if(board[i][j] == CellValue.O)
-					System.out.print("O\t");
-				else if(board[i][j] == CellValue.X)			
-					System.out.print("X\t");
-				else 
-					System.out.print((i*boardDimension + j) + "\t");
-			}
-			System.out.println();
-		}
-	}
+
+        for(int i = 0; i< boardDimension; i++){
+            System.out.println();
+
+            if(boardType == 0 && i%2 == 1)
+                System.out.print("\t");
+
+            for(int j = 0; j< boardDimension; j++){
+
+                switch(board[i][j]){
+
+                    case BLOCKED:
+                        System.out.print(" \t\t");
+                        break;
+
+                    case O:
+                        System.out.print("O\t\t");
+                        break;
+
+                    case X:
+                        System.out.print("X\t\t");
+                        break;
+
+                    default:
+                        System.out.print((i*boardDimension + j) + "\t\t");
+
+                }
+            }
+            System.out.println();
+        }
+    }
 
 	public CellValue[][] getBoard(){
 		return  board.clone();
-
 	}
 }
 
@@ -195,6 +231,7 @@ class ComputerPlayer implements Player{
 }
 
 class GameState{
+
 	public static boolean checkWin(int boardType, CellValue playerType, CellValue[][] board, int dimension){
 		if(boardType == 0)
 			return checkWinHexagonalBoard(playerType, board, dimension);
@@ -202,7 +239,7 @@ class GameState{
 			return checkWinHexagonalBoard(playerType, board, dimension);
 	}
 
-	public static boolean checkWinHexagonalBoard(CellValue playerType, CellValue[][] board, int dimension){
+	private static boolean checkWinHexagonalBoard(CellValue playerType, CellValue[][] board, int dimension){
 		if(CheckRow(playerType, board, dimension) || checkHexRightDiagonal(playerType, board, dimension)
 						|| checkHexLeftDiagonal(playerType, board, dimension))
 			return true;
@@ -210,7 +247,7 @@ class GameState{
 			return false;
 	}
 
-	public static boolean checkWinSquareBoard(CellValue playerType, CellValue[][] board, int dimension){
+	private static boolean checkWinSquareBoard(CellValue playerType, CellValue[][] board, int dimension){
 		if(CheckRow(playerType, board, dimension) || CheckColumn(playerType, board, dimension)
 				|| CheckLeftDiagonal(playerType, board, dimension) || CheckRightDiagonal(playerType, board, dimension))
 			return true;
@@ -253,7 +290,7 @@ class GameState{
 		for(int i = 0; i < dimension; i++){
 			set.add(board[i][i]);
 		}
-		if(set.size()==1)
+		if(set.size() ==1)
 			return true;
 		return false;
 	}
@@ -347,12 +384,7 @@ class Game{
 		this.setPlayers();
 		currentPlayer = player1;
 		gameResult = new CellValue[dimension][dimension];
-		for(int i = 0; i < dimension; i++){
-			for(int j = 0; j < dimension; j++){
-				gameResult[i][j] = CellValue.EMPTY;
-			}
-		}
-		if(gameSize > dimension){
+		if(gameSize != 1){
 			multiGame = new Game[dimension][dimension]; 
 			initialize();
 		}
@@ -370,46 +402,44 @@ class Game{
 		this.yboardsStart = yboardsStart;
 		gameOver = false;
 		gameResult = new CellValue[dimension][dimension];
-		for(int i = 0; i < dimension; i++){
-			for(int j = 0; j < dimension; j++){
-				gameResult[i][j] = CellValue.EMPTY;
-			}
-		}
-		if(gameSize > dimension){
+		if(gameSize != 1){
 			multiGame = new Game[dimension][dimension]; 
 			initialize();
 		}
 	}
 
 	private void setPlayers(){
+		
 		do{
 			System.out.println("Enter 1 for Single Player");
 			System.out.println("Enter 2 for Multi Player");
 			nPlayers = sc.nextInt();
 		}while( nPlayers != 1 && nPlayers != 2);
 
+		System.out.println("Enter player 1 Name");
+		tempName = sc.next();
+		player1 = new HumanPlayer(tempName, CellValue.O, this.board);
+
 		if(nPlayers == 1){
-			System.out.println("Enter player Name");
-			tempName = sc.next();
-			player1 = new HumanPlayer(tempName, CellValue.O, this.board);
+			
 			player2 = new ComputerPlayer(CellValue.X, this.board); 
+		
 		}
 		else{
-			System.out.println("Enter player 1 Name");
-			tempName = sc.next();
-			player1 = new HumanPlayer(tempName, CellValue.O, this.board);
+			
 			System.out.println("Enter player 2 Name");
 			tempName = sc.next();
 			player2 = new HumanPlayer(tempName, CellValue.X, this.board);
+		
 		}
 	}
 
 	private void initialize(){
 		for(int i = 0; i < dimension; i++){
 			for(int j = 0; j < dimension; j++){
+				gameResult[i][j] = CellValue.EMPTY;
 				multiGame[i][j] = new Game(board, gameSize/this.dimension,this.dimension,
 				player1, player2, (gameSize/this.dimension)*i, (gameSize/this.dimension)*j);
-				gameResult[i][j] = CellValue.EMPTY;
 			}
 		}
 	}
@@ -423,31 +453,29 @@ class Game{
 				index =  sc.nextInt();
 			}
 		}while(!board.setBox((index/gameSize), (index%gameSize), currentPlayer));
+		
 		steps.add(index);
 	}
 
 	public CellValue updateScore(Player player){
-		if(this.gameSize == this.dimension){
-			for(int i = 0; i < dimension; i++){
-				for(int j = 0; j < dimension; j++){
-					gameResult[i][j] = board.getCell(xboardsStart+i, yboardsStart+j);
-				}
-
-			}
+		
+		if(this.gameSize == 1){
+			return board.getCell(xboardsStart, yboardsStart);
 		}
-		else{
-			for(int i = 0;i < dimension; i++){
-				for(int j = 0; j< dimension; j++){
-					if(gameResult[i][j] == CellValue.EMPTY){
-						gameResult[i][j] = multiGame[i][j].updateScore(player);
-					}
+		
+		for(int i = 0;i < dimension; i++){
+			for(int j = 0; j< dimension; j++){
+				if(gameResult[i][j] == CellValue.EMPTY){
+					gameResult[i][j] = multiGame[i][j].updateScore(player);
 				}
 			}
 		}
+		
 		if(GameState.checkWin(boardType, player.getPlayerType(), gameResult, dimension)){
 			player.addScore(this.gameSize);
 			return player.getPlayerType();
 		}
+		
 		return CellValue.EMPTY;
 	} 
 
@@ -478,20 +506,24 @@ class Game{
 				System.out.println(" No more moves possible game is Tie");
 			}
 			else{
-				if(currentPlayer.equals(player1)){
-					currentPlayer = player2;
-				}
-				else{
-					currentPlayer = player1;
-				}
+				currentPlayer = switchPlayer(currentPlayer);
 				board.printBoard();
+
 			}
 
 		}
 		System.out.println(player1.getName()+" Score is "+player1.getScore());
 		System.out.println(player2.getName()+" Score is "+player2.getScore());
 	}
-	
+
+	Player switchPlayer(Player currentPlayer){
+		if(currentPlayer.equals(player1)){
+			return player2;
+		}
+		else{
+			return player1;
+		}
+	}	
 }
 
 public class TicTacToe{
