@@ -17,9 +17,11 @@ public class Board implements BoardMethods{
 
         for(int i = 0; i < boardDimension ; i++){
             for(int j = 0; j < boardDimension ; j++){
-                board[i][j] = CellValue.EMPTY;
                 if(irregularBoard == 0 && random.nextInt() < blockPercent){
                     board[i][j] = CellValue.BLOCKED;
+                }
+                else{
+                    board[i][j] = CellValue.EMPTY;
                 }
             }
         }

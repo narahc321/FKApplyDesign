@@ -3,7 +3,7 @@ package com.company;
 import java.util.Scanner;
 import java.util.ArrayList;
 
-public class Game{
+public class Game implements GameMethods{
     private Board board;
     private Player player1, player2, currentPlayer;
     private Scanner sc;
@@ -38,7 +38,6 @@ public class Game{
 
     Game(Board board, int gameSize, int dimension, Player player1, Player player2,
          int xboardsStart, int yboardsStart){
-
         this.board = board;
         multiGame = new Game[dimension][dimension];
         gameResult = new CellValue[dimension][dimension];
@@ -84,13 +83,13 @@ public class Game{
         for(int i = 0; i < dimension; i++){
             for(int j = 0; j < dimension; j++){
                 gameResult[i][j] = CellValue.EMPTY;
-                multiGame[i][j] = new Game(board, gameSize/this.dimension,this.dimension,
-                        player1, player2, (gameSize/this.dimension)*i, (gameSize/this.dimension)*j);
+                multiGame[i][j] = new Game(board, gameSize/this.dimension, this.dimension,
+                        player1, player2, (gameSize/this.dimension) * i, (gameSize/this.dimension) * j);
             }
         }
     }
 
-    public void setBox(Player currentPlayer){
+    private void setBox(Player currentPlayer){
         int index;
         do{
             index = currentPlayer.getIndex(board.getBoard(), gameSize);
@@ -162,7 +161,7 @@ public class Game{
         System.out.println(player2.getName()+" Score is "+player2.getScore());
     }
 
-    Player switchPlayer(Player currentPlayer){
+    private Player switchPlayer(Player currentPlayer){
         if(currentPlayer.equals(player1)){
             return player2;
         }
