@@ -1,0 +1,371 @@
+SECTION  I: First Iteration Game Project Design
+	[Till Phase III or Phase IV Submitted Upto 29th January, 2020]
+
+PART I: Design Diagrams
+	Sequence Diagrams
+	Class Diagrams
+	Dependency Diagrams
+
+PART II : Common Design/Choices and Conventions/Assumptions and Detailed Descriptions etc.
+
+PART III : Feature Specific Design/Choices and Conventions/Assumptions 
+
+GameDesign v2.0	- Requirement I
+	<STATUS> - 1. Tic-Tac-Toe consists of 3x3 Square Cells
+		Feature Specific Design Decision?
+		Implemented using board class which takes dimension
+	<STATUS> - 2. Game Between Two Humans
+		Feature Specific Design Decision?
+		Gave each player a type (X and O)
+	<STATUS> - 3. Game Between Human and Machine
+		Feature Specific Design Decision?
+		Human and Computer implement player so I assigned second player with computer
+	<STATUS> - 4. Winning Criteria - 3 Cells in Row/Column/Diagonal are in Same State.
+		Feature Specific Design Decision?
+		Keeping all in a set with player type and checking ste size
+	<STATUS> - 5. Announce Winning Player
+		Feature Specific Design Decision?
+		If the set size is one then the after his chance then we declare him as winner
+
+GameDesign v2.0	- Requirement II
+	<STATUS> - 6. Enhanced Tic-Tac-Toe Game Consist of 9x9 Squares...
+		Feature Specific Design Decision?
+		Made Board size and Game size separate 
+	<STATUS> - 7. Enhanced Tic-Tac-Toe will continue to expand in depth levels...
+		Feature Specific Design Decision?
+		Created game[][] in which each cell again stores game 
+	<STATUS> - 8. Extend Game to 4x4 Board
+		Feature Specific Design Decision?
+		As from begining we were taking dimension separately its not a problem
+	<STATUS> - 9. Human Player is Biased...
+		Feature Specific Design Decision?
+		Created ArrayList which stores steps so that he can undo 
+	<STATUS> - 10. Storing and Retrieving Game State
+		Feature Specific Design Decision?
+		As we are storing the steps we can go to any part of game
+	<STATUS> - 11. Store Players Game Statistics: Leaderboard
+		Feature Specific Design Decision?
+		Each player has a variable which stores his/her score.
+
+GameDesign v3.0	- Requirement III
+	<STATUS> - 12. Super Tic-Tac-Toe Game Extends Enhanced Tic-Tac-Toe Game...
+		Feature Specific Design Decision?
+		Blocked cells of square board to give Hexangonal view
+	<STATUS> - 13. Design Winning and Losing Criterias On All Edges...
+		Feature Specific Design Decision?
+		We should change the column only after chaning row twice.
+	<STATUS> - 14. Incorporate Irregular shaped Hexagonal Boards
+		Feature Specific Design Decision?
+		Randomly blocking the cells.
+
+GameDesign v4.0	- Requirement IV
+	<STATUS> - 15. Incorporate Biased Game Board
+		Feature Specific Design Decision?
+		- Not Implemented -
+	<STATUS> - 16.Incorporate Connect Four Game In Design
+		Feature Specific Design Decision?
+		- Not Implemented -
+	<STATUS> - 17. Discover Newer Abstract Types
+		Feature Specific Design Decision?
+		- Not Implemented -
+	<STATUS> - 18. Refactor and Reuse Code In Both Games
+		Feature Specific Design Decision?
+		- Not Implemented -
+
+	
+SECTION II: Second Iteration[Refactoring/Redesign] Game Project Design 
+	[Till Phase III or Phase IV Submitted Upto 03rd February, 2020]
+
+PART I : Common Design/Choices, Conventions and Assumptions
+	Sequence Diagrams
+	Class Diagrams
+	Dependency Diagrams
+
+PART II : Common Design/Choices and Conventions/Assumptions and Detailed Descriptions etc.
+
+PART III: Feature Specific Design/Choices, Conventions and Assumptions	
+
+GameDesign v2.0	- Requirement I
+	<STATUS> - 1. Tic-Tac-Toe consists of 3x3 Square Cells
+		Feature Specific Design Decision?
+		Implemented using board class which takes dimension
+	<STATUS> - 2. Game Between Two Humans
+		Feature Specific Design Decision?
+		Gave each player a type (X and O)
+	<STATUS> - 3. Game Between Human and Machine
+		Feature Specific Design Decision?
+		Human and Computer implement player so I assigned second player with computer
+	<STATUS> - 4. Winning Criteria - 3 Cells in Row/Column/Diagonal are in Same State.
+		Feature Specific Design Decision?
+		Keeping all in a set with player type and checking ste size
+	<STATUS> - 5. Announce Winning Player
+		Feature Specific Design Decision?
+		If the set size is one then the after his chance then we declare him as winner
+
+GameDesign v2.0	- Requirement II
+	<STATUS> - 6. Enhanced Tic-Tac-Toe Game Consist of 9x9 Squares...
+		Feature Specific Design Decision?
+		Made Board size and Game size separate 
+	<STATUS> - 7. Enhanced Tic-Tac-Toe will continue to expand in depth levels...
+		Feature Specific Design Decision?
+		Created game[][] in which each cell again stores game 
+	<STATUS> - 8. Extend Game to 4x4 Board
+		Feature Specific Design Decision?
+		As from begining we were taking dimension separately its not a problem
+	<STATUS> - 9. Human Player is Biased...
+		Feature Specific Design Decision?
+		Created ArrayList which stores steps so that he can undo 
+	<STATUS> - 10. Storing and Retrieving Game State
+		Feature Specific Design Decision?
+		As we are storing the steps we can go to any part of game
+	<STATUS> - 11. Store Players Game Statistics: Leaderboard
+		Feature Specific Design Decision?
+		Each player has a variable which stores his/her score.
+
+GameDesign v3.0	- Requirement III
+	<STATUS> - 12. Super Tic-Tac-Toe Game Extends Enhanced Tic-Tac-Toe Game...
+		Feature Specific Design Decision?
+		Blocked cells of square board to give Hexangonal view
+	<STATUS> - 13. Design Winning and Losing Criterias On All Edges...
+		Feature Specific Design Decision?
+		We should change the column only after chaning row twice.
+	<STATUS> - 14. Incorporate Irregular shaped Hexagonal Boards
+		Feature Specific Design Decision?
+		Randomly blocking the cells.
+
+GameDesign v4.0	- Requirement IV
+	<STATUS> - 15. Incorporate Biased Game Board
+		Feature Specific Design Decision?
+		- Not Implemented -
+	<STATUS> - 16.Incorporate Connect Four Game In Design
+		Feature Specific Design Decision?
+		- Not Implemented -
+	<STATUS> - 17. Discover Newer Abstract Types
+		Feature Specific Design Decision?
+		- Not Implemented -
+	<STATUS> - 18. Refactor and Reuse Code In Both Games
+		Feature Specific Design Decision?
+		- Not Implemented -
+
+SECTION III: GameDesign Project Feature and Test Cases Implementation Status and Description
+
+GameDesign v1.0 - Requirement I
+
+Completed 	- 1. Tic-Tac-Toe consists of 3x3 Square Cells
+	TestCases:
+	Test1 : Test Generation of 3x3 Board
+		Mention Class Name and Function Names?
+		class : BoardTest, Function : testBoard()
+	Test2 : Test Initialisation of 3x3 Board
+		Mention Class Name and Function Names?
+		class : BoardTest, Function : testBoard()
+	Test3 : Test Cell Generation
+		Mention Class Name and Function Names?
+		class : BoardTest, Function : testBoard()
+	We can change the dimension and give it 3
+
+Completed 	- 2. Game Between Two Humans
+	TestCases:
+	Test1 : Test Title 
+		Mention Class Name and Function Names?
+		class : GameTest, Function : gameTest()
+	Test2 : Test Title
+		Mention Class Name and Function Names?
+		class : GameTest, Function : gameTest()
+	We change declare Human players in it and play the game
+
+Completed 	- 3. Game Between Human and Machine
+	TestCases:
+	Test1 : Test Title 
+		Mention Class Name and Function Names?
+		class : GameTest, Function : gameTest()
+	Test2 : Test Title
+		Mention Class Name and Function Names?
+		class : GameTest, Function : gameTest()
+	We change declare Computer players in it and play the game
+
+<STATUS> - 4. Winning Criteria - 3 Cells in Row/Column/Diagonal are in Same State.
+	TestCases:
+	Test1 : Test Title
+		Mention Class Name and Function Names?
+		class : GameStateTest, Function : gameTest()
+	Test2 : Test Title
+		Mention Class Name and Function Names?
+		class : GameStateTest, Function : gameTest()
+
+<STATUS> - 5. Announce Winning Player
+	TestCases:
+	Test : Test Title
+		Mention Class Name and Function Names?
+		class : GameStateTest, Function : gameTest()
+	set BoardSize = 0 then the player automatically wins.
+
+GameDesign v2.0	- Requirement II
+
+<STATUS> - 6. Enhanced Tic-Tac-Toe Game Consist of 9x9 Squares...
+	TestCases:
+	Test1 : Test Title
+		Mention Class Name and Function Names?
+		class : BoardTest, Function : testBoard()
+	Test2 : Test Title
+		Mention Class Name and Function Names?
+		class : BoardTest, Function : testBoard()
+	Set Board size to 9		
+
+<STATUS> - 7. Enhanced Tic-Tac-Toe will continue to expand in depth levels...
+	TestCases:
+	Test1 : Test Title
+		Mention Class Name and Function Names?
+		class : GameTest, Function : gameTest()
+	Test2 : Test Title
+		Mention Class Name and Function Names?
+		class : GameTest, Function : gameTest()
+		We can Set the levels.
+
+<STATUS> - 8. Extend Game to 4x4 Board
+	TestCases:
+	Test1 : Test Title
+		Mention Class Name and Function Names?
+		class : BoardTest, Function : testBoard()
+	Test2 : Test Title
+		Mention Class Name and Function Names?
+		class : BoardTest, Function : testBoard()
+	We can change the board size to 4
+
+<STATUS> - 9. Human Player is Biased...
+	TestCases:
+	Test1 : Test Title
+		Mention Class Name and Function Names?
+		class : GameTest, Function : gameTest()		
+	Test2 : Test Title
+		Mention Class Name and Function Names?
+		class : GameTest, Function : gameTest()
+	In game we are changing when we press 0 for undo
+
+<STATUS> - 10. Storing and Retrieving Game State
+	Test1 : Test Title
+		Mention Class Name and Function Names?
+		class : GameTest, Function : gameTest()		
+	Test2 : Test Title
+		Mention Class Name and Function Names?
+		class : GameTest, Function : gameTest()
+	undo multiple times
+
+<STATUS> - 11. Store Players Game Statistics: Leaderboard
+	TestCases:
+	Test1 : Test Title
+		Mention Class Name and Function Names?
+		class : HumanPlayerTest, Function : testHumanPlayer()
+	Test2 : Test Title
+		Mention Class Name and Function Names?
+		class : ComputerPlayerTest, Function : testComputerPlayer()
+
+
+GameDesign v3.0	- Requirement III
+
+<STATUS> - 12. Super Tic-Tac-Toe Game Extends Enhanced Tic-Tac-Toe Game...
+	TestCases:
+	Test1 : Test Title
+		Mention Class Name and Function Names?
+	Test2 : Test Title
+		Mention Class Name and Function Names?
+
+<STATUS> - 13. Design Winning and Losing Criterias On All Edges...
+	TestCases:
+	Test1 : Test Title
+		Mention Class Name and Function Names?
+	Test2 : Test Title
+		Mention Class Name and Function Names?
+
+<STATUS> - 14. Incorporate Irregular shaped Hexagonal Boards
+	TestCases:
+	Test1 : Test Title
+		Mention Class Name and Function Names?
+	Test2 : Test Title
+		Mention Class Name and Function Names?
+
+
+GameDesign v4.0	- Requirement IV
+
+<STATUS> - 15. Incorporate Biased Game Board
+	TestCases:
+	Test1 : Test Title
+		Mention Class Name and Function Names?
+		- Not Implemented -
+	Test2 : Test Title
+		Mention Class Name and Function Names?
+		- Not Implemented -
+
+<STATUS> - 16. Incorporate Connect Four Game In Design
+	TestCases:
+	Test1 : Test Title
+		Mention Class Name and Function Names?
+		- Not Implemented -
+	Test2 : Test Title
+		Mention Class Name and Function Names?
+		- Not Implemented -
+
+<STATUS> - 17. Discover Newer Abstract Types
+	TestCases:
+	Test1 : Test Title
+		Mention Class Name and Function Names?
+		- Not Implemented -
+	Test2 : Test Title
+		Mention Class Name and Function Names?
+		- Not Implemented -
+
+<STATUS> - 18. Refactor and Reuse Code In Both Games
+	TestCases:
+	Test1 : Test Title
+		Mention Class Name and Function Names?
+		- Not Implemented -
+	Test2 : Test Title
+		Mention Class Name and Function Names?
+		- Not Implemented -
+
+SECTION III: How to Run/Test Your Code?
+	Describe How To Run Your Code
+
+	=> Run project
+		--> The TicTacToe Folder in the repo is a Intellij project. 
+		--> We should open it with IntelliJ.
+		--> once opened run the main.java it will run the code.
+
+	=> Test project
+		--> open the Test Java files with the intelleij
+		--> We can find run buttons near each test method in the line indexes
+		--> use those buttons to test using that methods.
+
+	=>Sample Input 1:
+		--> 1 (To select regular shaped board)
+		--> 1 (To select board with Square shape)
+		--> 4 (To select game of dimension 4 x 4)
+		--> 2 (To play game of 2 levels depth) 
+		--> 2(To play Human vs Human)
+		--> sai (Player 1 Name)
+		--> charan (Player 2 Name)
+			--> 2 (To mark that Index (only if 2 is visible as we selected irregular board))
+			--> 0 (To skip the undo)
+			--> 0 (To skip the undo for computer chance)
+			Repeat the last three steps ( Not values) till one player wins the game
+
+	=>Sample Input 2:
+		--> 0 (To select Irregular shaped board)
+		--> 0 (To select board with hexagonal shape)
+		--> 4 (To select game of dimension 4 x 4)
+		--> 2 (To play game of 2 levels depth) 
+		--> 1 (To play Human vs computer)
+		--> charan (Player Name)
+			--> 2 (To mark that Index (only if 2 is visible as we selected irregular board))
+			--> 0 (To skip the undo)
+			--> 0 (To skip the undo for computer chance)
+			Repeat the last three steps ( Not values) till one player wins the game
+
+
+	Can I Run Test.java to test your whole source code?
+	-->	No (Run Test cases as Mentioned above)
+	
+
+	Are you providing all Input/Output files to run Test Code using Test.java?
+	--> No (See the above sample Inputs given, you can see board after each step and game stops after one player wins)
+
