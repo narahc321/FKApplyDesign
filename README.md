@@ -77,5 +77,9 @@ commit to Phase3SuperTicTacToe
 commit to dev
     added unit tests for every class
 
+commit to DesignDocument
+	Added initial and final Design Diagrams
+	Added DesignDocument with all required answers
+
 
 
